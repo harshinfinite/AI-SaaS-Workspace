@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server';
-import { auth } from './auth';
+import NextAuth from 'next-auth';
+import { authConfig } from './auth.config';
+
+const { auth } = NextAuth(authConfig);
 
 export default auth(async function middleware(request) {
   const session = request.auth;
@@ -14,3 +17,6 @@ export default auth(async function middleware(request) {
     return NextResponse.next();
   }
 });
+export const config = {
+  matcher: ['/login', '/register', '/dashboard/:path*'],
+};

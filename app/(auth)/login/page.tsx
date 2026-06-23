@@ -55,9 +55,10 @@ const Login = () => {
           type: 'SET_ERROR',
           payload: { value: 'Invalid email or password' },
         });
+        return;
       }
       router.push('/dashboard');
-    } catch (error) {
+    } catch (_) {
       dispatch({
         type: 'SET_ERROR',
         payload: { value: 'Something Went Wrong!' },
@@ -66,7 +67,60 @@ const Login = () => {
       dispatch({ type: 'SET_LOADING', payload: { value: false } });
     }
   };
-  return <div></div>;
+  return (
+    <div className="w-full max-w-md p-8 rounded-xl bg-background shadow-md">
+      <h1 className="text-2xl font-bold mb-2">Welcome Back</h1>
+      <p className="text-muted-foreground text-sm mb-6">
+        Sign in to Your Account
+      </p>
+      {state.error && (
+        <p className="text-destructive text-sm mb-4">{state.error}</p>
+      )}
+      <div className="mb-4">
+        <Label htmlFor="email">Email</Label>
+        <Input
+          id="email"
+          type="email"
+          value={state.email}
+          placeholder="Enter Email"
+          onChange={(e) =>
+            dispatch({
+              type: 'SET_FIELD',
+              payload: { field: 'email', value: e.target.value },
+            })
+          }
+        />
+      </div>
+      <div className="mb-4">
+        <Label htmlFor="password">Password</Label>
+        <Input
+          id="password"
+          type="password"
+          value={state.password}
+          placeholder="Enter Password"
+          onChange={(e) =>
+            dispatch({
+              type: 'SET_FIELD',
+              payload: { field: 'password', value: e.target.value },
+            })
+          }
+        />
+      </div>
+      <Button
+        className="w-full"
+        onClick={handleSubmit}
+        disabled={state.loading}
+      >
+        {state.loading ? 'Submitting details...' : 'Login'}
+      </Button>
+      <p className="text-sm text-center mt-4">
+        Don&apos;t have an Account?
+        <a href="/register" className="text-primary  hover:underline">
+          Register
+        </a>
+      </p>
+    </div>
+  );
 };
 
 export default Login;
