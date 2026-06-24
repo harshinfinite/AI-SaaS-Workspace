@@ -1,10 +1,13 @@
 'use client';
 import { useReducer } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { registerSchema } from '@/lib/validations/auth';
+import { Eye } from 'lucide-react';
+import { EyeOff } from 'lucide-react';
 
 interface FormState {
   name: string;
@@ -44,6 +47,7 @@ function FormReducer(state: FormState, action: FormActions): FormState {
 const Register = () => {
   const router = useRouter();
   const [state, dispatch] = useReducer(FormReducer, initialState);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async () => {
     dispatch({ type: 'SET_LOADING', payload: { value: true } });
@@ -82,7 +86,7 @@ const Register = () => {
         return;
       }
       router.push('/login');
-    } catch (error) {
+    } catch (_) {
       dispatch({
         type: 'SET_ERROR',
         payload: { value: 'Something Went Wrong!' },
@@ -130,35 +134,59 @@ const Register = () => {
           }
         />
       </div>
-      <div className="mb-4">
+      <div className="mb-4 ">
         <Label htmlFor="password">Password</Label>
-        <Input
-          id="password"
-          type="password"
-          value={state.password}
-          placeholder="Enter Password"
-          onChange={(e) =>
-            dispatch({
-              type: 'SET_FIELD',
-              payload: { field: 'password', value: e.target.value },
-            })
-          }
-        />
+        <div className="relative">
+          <Input
+            className="pr-10"
+            id="password"
+            type={showPassword ? 'text' : 'password'}
+            value={state.password}
+            placeholder="Enter Password"
+            onChange={(e) =>
+              dispatch({
+                type: 'SET_FIELD',
+                payload: { field: 'password', value: e.target.value },
+              })
+            }
+          />
+          <button
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer"
+            onClick={() => {
+              setShowPassword(!showPassword);
+            }}
+            type="button"
+          >
+            {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
+          </button>
+        </div>
       </div>
       <div className="mb-4">
         <Label htmlFor="confirmPassword">Confirm Password</Label>
-        <Input
-          id="confirmPassword"
-          type="password"
-          value={state.confirmPassword}
-          placeholder="Confirm Password"
-          onChange={(e) =>
-            dispatch({
-              type: 'SET_FIELD',
-              payload: { field: 'confirmPassword', value: e.target.value },
-            })
-          }
-        />
+        <div className="relative">
+          <Input
+            className="pr-10"
+            id="confirmPassword"
+            type={showPassword ? 'text' : 'password'}
+            value={state.confirmPassword}
+            placeholder="Confirm Password"
+            onChange={(e) =>
+              dispatch({
+                type: 'SET_FIELD',
+                payload: { field: 'confirmPassword', value: e.target.value },
+              })
+            }
+          />
+          <button
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer"
+            onClick={() => {
+              setShowPassword(!showPassword);
+            }}
+            type="button"
+          >
+            {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
+          </button>
+        </div>
       </div>
       <Button
         className="w-full"

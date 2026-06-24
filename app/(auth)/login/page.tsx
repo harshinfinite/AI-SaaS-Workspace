@@ -1,10 +1,13 @@
 'use client';
+import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useReducer } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Eye } from 'lucide-react';
+import { EyeOff } from 'lucide-react';
 
 interface LoginState {
   email: string;
@@ -40,6 +43,7 @@ function LoginReducer(state: LoginState, action: LoginAction): LoginState {
 const Login = () => {
   const router = useRouter();
   const [state, dispatch] = useReducer(LoginReducer, initialState);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async () => {
     dispatch({ type: 'SET_LOADING', payload: { value: true } });
@@ -93,18 +97,30 @@ const Login = () => {
       </div>
       <div className="mb-4">
         <Label htmlFor="password">Password</Label>
-        <Input
-          id="password"
-          type="password"
-          value={state.password}
-          placeholder="Enter Password"
-          onChange={(e) =>
-            dispatch({
-              type: 'SET_FIELD',
-              payload: { field: 'password', value: e.target.value },
-            })
-          }
-        />
+        <div className="relative">
+          <Input
+            className="pr-10"
+            id="password"
+            type={showPassword ? 'text' : 'password'}
+            value={state.password}
+            placeholder="Enter Password"
+            onChange={(e) =>
+              dispatch({
+                type: 'SET_FIELD',
+                payload: { field: 'password', value: e.target.value },
+              })
+            }
+          />
+          <button
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer"
+            onClick={() => {
+              setShowPassword(!showPassword);
+            }}
+            type="button"
+          >
+            {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
+          </button>
+        </div>
       </div>
       <Button
         className="w-full"
