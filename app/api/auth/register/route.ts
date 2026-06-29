@@ -24,7 +24,7 @@ export async function POST(request: Request): Promise<NextResponse> {
     const hashPassword = await bcrypt.hash(password, 12);
     await User.create({ name, email, password: hashPassword });
     return NextResponse.json(
-      { message: 'Account Created Sussfully!' },
+      { message: 'Account Created Successfully!' },
       { status: 201 }
     );
   } catch (error) {
