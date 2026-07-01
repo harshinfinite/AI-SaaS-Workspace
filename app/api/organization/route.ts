@@ -1,4 +1,5 @@
 import { auth } from '@/auth';
+import mongoose from 'mongoose';
 import { NextResponse } from 'next/server';
 import connectDB from '@/server/db/mongoose';
 import Organization from '@/server/models/Organization';
@@ -44,6 +45,26 @@ export async function POST(request: Request): Promise<NextResponse> {
   } catch (_) {
     return NextResponse.json(
       { message: 'Something went Wrong!' },
+      { status: 500 }
+    );
+  }
+}
+export async function GET(request: Request): Promise<NextResponse> {
+  const session = await auth();
+  if (!session || !session.user?.id) {
+    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+  }
+  try {
+    await connectDB();
+    const memberships = await OrgMember.find({ userId: session.user.id });
+    const orgIds: mongoose.Types.ObjectId[] = memberships.map(
+      (member) => member.orgId
+    );
+    const orgs = await Organization.find({ _id: { $in: orgIds } });
+    return NextResponse.json({ organization: orgs }, { status: 200 });
+  } catch (_) {
+    return NextResponse.json(
+      { message: 'Unable to fetch Data, Try again' },
       { status: 500 }
     );
   }
