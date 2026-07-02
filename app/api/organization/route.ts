@@ -61,7 +61,7 @@ export async function GET(request: Request): Promise<NextResponse> {
       (member) => member.orgId
     );
     const orgs = await Organization.find({ _id: { $in: orgIds } });
-    return NextResponse.json({ organization: orgs }, { status: 200 });
+    return NextResponse.json({ organizations: orgs }, { status: 200 });
   } catch (_) {
     return NextResponse.json(
       { message: 'Unable to fetch Data, Try again' },
