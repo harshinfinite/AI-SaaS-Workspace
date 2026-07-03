@@ -1,9 +1,10 @@
 import mongoose, { Document, Schema } from 'mongoose';
+import { OrgRole } from '@/lib/permission';
 
 interface IOrgMember extends Document {
   userId: mongoose.Types.ObjectId;
   orgId: mongoose.Types.ObjectId;
-  role: 'owner' | 'admin' | 'member' | 'viewer';
+  role: OrgRole;
 }
 
 const orgMemberSchema = new Schema(
