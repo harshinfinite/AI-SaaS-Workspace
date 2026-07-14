@@ -28,7 +28,14 @@ const config: NextAuthConfig = {
   ],
   session: { strategy: 'jwt' },
   pages: { signIn: '/login' },
-  callbacks: {},
+  callbacks: {
+    async session({ session, token }) {
+      if (token.sub && session.user) {
+        session.user.id = token.sub;
+      }
+      return session;
+    },
+  },
 };
 const { handlers, auth, signIn, signOut } = NextAuth(config);
 
