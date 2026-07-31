@@ -17,3 +17,9 @@ export function canEditContent(role: OrgRole): boolean {
   }
   return false;
 }
+export function canCreateDocument(role: OrgRole): boolean {
+  if (role === 'owner' || role === 'admin') {
+    return true;
+  }
+  return false;
+}
