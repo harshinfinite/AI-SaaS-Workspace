@@ -65,3 +65,38 @@ export async function POST(request: Request): Promise<NextResponse> {
     );
   }
 }
+
+export async function GET(request: Request): Promise<NextResponse> {
+  const session = await auth();
+  if (!session || !session.user?.id) {
+    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+  }
+  try {
+    const currentCookies = await cookies();
+    const activeOrgId = currentCookies.get('activeOrgId')?.value;
+    if (!activeOrgId) {
+      return NextResponse.json(
+        { message: 'NO active organization selected' },
+        { status: 400 }
+      );
+    }
+    await connectDB();
+    const membership = await OrgMember.findOne({
+      orgId: activeOrgId,
+      userId: session.user.id,
+    });
+    if (!membership) {
+      return NextResponse.json(
+        { message: 'Not member of this organization' },
+        { status: 403 }
+      );
+    }
+    const documentsList = await Document.find({ orgId: activeOrgId });
+    return NextResponse.json({ documentList: documentsList }, { status: 200 });
+  } catch (_) {
+    return NextResponse.json(
+      { message: 'Something went wrong!' },
+      { status: 500 }
+    );
+  }
+}
