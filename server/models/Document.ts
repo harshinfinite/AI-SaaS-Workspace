@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
-interface IContributor {
+export interface IContributor {
   userId: mongoose.Types.ObjectId;
   joinedAt: Date;
 }
