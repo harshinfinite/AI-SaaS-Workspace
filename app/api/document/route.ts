@@ -91,7 +91,7 @@ export async function GET(request: Request): Promise<NextResponse> {
         { status: 403 }
       );
     }
-    const documentsList = await Document.find({ orgId: activeOrgId });
+    const documentsList = await Doc.find({ orgId: activeOrgId });
     return NextResponse.json({ documentList: documentsList }, { status: 200 });
   } catch (_) {
     return NextResponse.json(
