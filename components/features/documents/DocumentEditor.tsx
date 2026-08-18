@@ -1,6 +1,7 @@
 'use client';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
+import EditorToolbar from './EditorToolbar';
 
 const DocEditor = () => {
   const editor = useEditor({
@@ -8,7 +9,12 @@ const DocEditor = () => {
     content: '<p>Hello</p>',
   });
 
-  return <EditorContent editor={editor}></EditorContent>;
+  return (
+    <>
+      <EditorToolbar editor={editor}></EditorToolbar>
+      <EditorContent editor={editor}></EditorContent>
+    </>
+  );
 };
 
 export default DocEditor;
