@@ -12,7 +12,10 @@ const DocEditor = () => {
   return (
     <>
       <EditorToolbar editor={editor}></EditorToolbar>
-      <EditorContent editor={editor}></EditorContent>
+      <EditorContent
+        editor={editor}
+        className="[&_h1]:text-3xl [&_h1]:font-bold [&_ol]:list-decimal [&_ol]:pl-4 [&_ul]:list-disc [&_ul]:pl-4"
+      ></EditorContent>
     </>
   );
 };
