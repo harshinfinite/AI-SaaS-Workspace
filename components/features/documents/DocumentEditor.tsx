@@ -2,11 +2,16 @@
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import EditorToolbar from './EditorToolbar';
+import type { IDocument } from '@/server/models/Document';
 
-const DocEditor = () => {
+interface DocEditorProps {
+  document: IDocument;
+}
+
+const DocEditor = ({ document }: DocEditorProps) => {
   const editor = useEditor({
     extensions: [StarterKit],
-    content: '<p>Hello</p>',
+    content: document.content,
   });
 
   return (

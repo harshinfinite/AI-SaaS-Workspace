@@ -1,5 +1,5 @@
 import DocEditor from '@/components/features/documents/DocumentEditor';
 const Editor = () => {
-  return <DocEditor></DocEditor>;
+  return <></>;
 };
 export default Editor;

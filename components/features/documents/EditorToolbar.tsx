@@ -33,7 +33,6 @@ const EditorToolbar = ({ editor }: EditorTool) => {
       <Button
         onClick={() => {
           editor.chain().focus().toggleHeading({ level: 1 }).run();
-          console.log(JSON.stringify(editor.getJSON(), null, 2));
         }}
       >
         Heading
@@ -47,8 +46,7 @@ const EditorToolbar = ({ editor }: EditorTool) => {
       </Button>
       <Button
         onClick={() => {
-          const success = editor.chain().focus().toggleOrderedList().run();
-          console.log('orederd command succeeded:', success);
+          editor.chain().focus().toggleOrderedList().run();
         }}
       >
         Numbered list

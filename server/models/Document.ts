@@ -1,13 +1,14 @@
 import mongoose, { Schema, Document } from 'mongoose';
+import type { JSONContent } from '@tiptap/core';
 
 export interface IContributor {
   userId: mongoose.Types.ObjectId;
   joinedAt: Date;
 }
 
-interface IDocument extends Document {
+export interface IDocument extends Document {
   title: string;
-  content: Record<string, unknown>;
+  content: JSONContent;
   createdAt: Date;
   orgId: mongoose.Types.ObjectId;
   authorId: mongoose.Types.ObjectId;
