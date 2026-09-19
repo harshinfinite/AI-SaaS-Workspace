@@ -3,7 +3,8 @@ import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import EditorToolbar from './EditorToolbar';
 import type { IDocument } from '@/server/models/Document';
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
+import { io } from 'socket.io-client';
 
 interface DocEditorProps {
   document: IDocument;
@@ -11,6 +12,15 @@ interface DocEditorProps {
 
 const DocEditor = ({ document }: DocEditorProps) => {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    const socket = io();
+    console.log('connected to socket');
+    return () => {
+      socket.disconnect();
+      console.log('disconnected from socket');
+    };
+  }, []);
 
   async function saveDocument() {
     try {
