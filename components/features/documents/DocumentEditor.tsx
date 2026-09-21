@@ -16,6 +16,7 @@ const DocEditor = ({ document }: DocEditorProps) => {
   useEffect(() => {
     const socket = io();
     console.log('connected to socket');
+    socket.emit('join-document', document._id);
     return () => {
       socket.disconnect();
       console.log('disconnected from socket');
