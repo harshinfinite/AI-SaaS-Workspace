@@ -12,26 +12,38 @@ interface DocEditorProps {
 
 const DocEditor = ({ document }: DocEditorProps) => {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const broadcastTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  );
+  const socketRef = useRef<ReturnType<typeof io> | null>(null);
+  const editorRef = useRef<typeof editor | null>(null);
 
   useEffect(() => {
     const socket = io();
+    socketRef.current = socket;
     console.log('connected to socket');
+    socket.on('disconnect', (reason) => {
+      console.log('Disconnected', reason);
+    });
+    socket.on('content-change', (data) => {
+      editorRef.current?.commands.setContent(data);
+    });
     socket.emit('join-document', document._id);
     return () => {
       socket.disconnect();
       console.log('disconnected from socket');
     };
-  }, []);
+  }, [document._id]);
 
   async function saveDocument() {
     try {
       const editorObj = editor.getJSON();
-      const response = await fetch(`/api/document/${document._id}`, {
+      await fetch(`/api/document/${document._id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ content: editorObj }),
       });
-    } catch (_) {
+    } catch {
       console.log('Something went wrong!');
     }
   }
@@ -45,8 +57,17 @@ const DocEditor = ({ document }: DocEditorProps) => {
       timeoutRef.current = setTimeout(() => {
         saveDocument();
       }, 3000);
+      if (broadcastTimeoutRef.current) {
+        clearTimeout(broadcastTimeoutRef.current);
+      }
+      broadcastTimeoutRef.current = setTimeout(() => {
+        socketRef.current?.emit('content-change', editor.getJSON());
+      }, 1500);
     },
   });
+  useEffect(() => {
+    editorRef.current = editor;
+  }, [editor]);
 
   return (
     <>
